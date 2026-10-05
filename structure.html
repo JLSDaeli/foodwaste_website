@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WasteAway — Turn food waste into community value</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        waste: {
+                            50: '#f4f7f4',
+                            100: '#e8f0e8',
+                            200: '#cbe1cb',
+                            500: '#2d6a4f',
+                            600: '#1b4332',
+                            700: '#0f291e',
+                            800: '#081c15',
+                            accent: '#2d6a4f',
+                            bg: '#fcfcfb',
+                            card: '#ffffff'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #fcfcfb;
+            color: #1b4332;
+            font-family: 'Inter', sans-serif;
+        }
+        .hero-gradient {
+            background: radial-gradient(circle at top right, rgba(45, 106, 79, 0.1), transparent 50%);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-waste-500 selection:text-white">
+
+    <header class="w-full bg-[#fcfcfb] border-b border-gray-100 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchView('home')">
+                <div class="w-9 h-9 bg-waste-500 rounded-xl flex items-center justify-center text-white shadow-md">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                </div>
+                <span class="font-bold text-xl tracking-tight text-waste-600">WasteAway</span>
+            </div>
+            
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-gray-600">
+                <button onclick="switchView('home')" id="nav-home" class="hover:text-waste-600 transition-colors">Home</button>
+                <button onclick="switchView('dashboard')" id="nav-dashboard" class="hover:text-waste-600 transition-colors">Dashboard</button>
+                <button onclick="startDonation()" id="nav-donate" class="hover:text-waste-600 transition-colors">Donate</button>
+                <button onclick="switchView('rewards')" id="nav-rewards" class="hover:text-waste-600 transition-colors">Rewards</button>
+            </nav>
+
+            <div class="flex items-center space-x-4">
+                <button onclick="handleLogout()" id="logout-btn" class="bg-gray-100 hover:bg-gray-200 text-gray-800 px-5 py-2.5 rounded-full text-sm font-semibold transition-all">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+
+        <!-- VIEW 1: HOME LANDING PAGE -->
+        <div id="view-home" class="view-section">
+            <section class="relative hero-gradient pt-12 pb-24 overflow-hidden">
+                <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    <div class="lg:col-span-7 space-y-6">
+                        <span class="inline-block bg-waste-100 text-waste-600 px-3.5 py-1 rounded-full text-xs font-bold tracking-wide uppercase">Community Food Recovery</span>
+                        <h1 class="text-5xl lg:text-6xl font-extrabold text-waste-700 tracking-tight leading-[1.1]">
+                            Turn food waste into community value.
+                        </h1>
+                        <p class="text-lg text-gray-600 max-w-xl leading-relaxed">
+                            WasteAway connects unwanted food with people, farms, and organizations that can put it to good use — while rewarding the people who donate.
+                        </p>
+                        <div class="flex flex-wrap items-center gap-4 pt-2">
+                            <button onclick="startDonation()" class="bg-waste-500 hover:bg-waste-600 text-white px-8 py-3.5 rounded-full font-semibold shadow-lg shadow-waste-500/20 transition-all flex items-center space-x-2">
+                                <span>Start Donating</span>
+                            </button>
+                            <button onclick="scrollToHowItWorks()" class="bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 px-7 py-3.5 rounded-full font-semibold transition-all">
+                                How It Works
+                            </button>
+                        </div>
+                        <div class="flex items-center space-x-6 pt-4 text-xs font-semibold text-gray-500">
+                            <span class="flex items-center"><span class="text-green-600 mr-1.5 font-bold">✓</span> Community-focused</span>
+                            <span class="flex items-center"><span class="text-green-600 mr-1.5 font-bold">✓</span> Reward-based</span>
+                            <span class="flex items-center"><span class="text-green-600 mr-1.5 font-bold">✓</span> Less waste</span>
+                        </div>
+                    </div>
+                    
+                    <div class="lg:col-span-5 relative flex justify-center">
+                        <div class="bg-white p-6 rounded-3xl shadow-xl border border-gray-100 w-full max-w-sm relative z-10">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">This Week</span>
+                                <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full">+30 pts</span>
+                            </div>
+                            <div class="flex items-center space-x-4 mb-4">
+                                <div class="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center text-2xl">🥕</div>
+                                <div>
+                                    <div class="text-xs text-gray-500">Food saved from waste</div>
+                                    <div class="text-2xl font-black text-waste-700">1,284 kg</div>
+                                </div>
+                            </div>
+                            <div class="bg-gray-50 p-3 rounded-2xl text-xs text-gray-600 flex items-center space-x-2">
+                                <span>🌱</span>
+                                <span>Making every donation count</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works Section -->
+            <section id="how-it-works" class="py-20 bg-white">
+                <div class="max-w-7xl mx-auto px-6">
+                    <div class="text-center max-w-2xl mx-auto mb-16">
+                        <span class="text-xs font-bold text-waste-500 uppercase tracking-wider">How It Works</span>
+                        <h2 class="text-3xl font-bold text-waste-700 mt-2">Three steps. One better outcome.</h2>
+                        <p class="text-gray-600 text-sm mt-2">WasteAway keeps the process simple for the community.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-waste-50/50 p-8 rounded-3xl border border-gray-100 relative">
+                            <div class="text-3xl font-black text-gray-300 absolute top-6 right-6">01</div>
+                            <div class="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-2xl mb-6">🥬</div>
+                            <h3 class="text-xl font-bold text-waste-700 mb-2">Donate</h3>
+                            <p class="text-sm text-gray-600 leading-relaxed">Tell us what food you have and roughly how much you want to donate.</p>
+                        </div>
+                        <div class="bg-waste-50/50 p-8 rounded-3xl border border-gray-100 relative">
+                            <div class="text-3xl font-black text-gray-300 absolute top-6 right-6">02</div>
+                            <div class="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-2xl mb-6">🚚</div>
+                            <h3 class="text-xl font-bold text-waste-700 mb-2">Route</h3>
+                            <p class="text-sm text-gray-600 leading-relaxed">WasteAway directs it to the appropriate community, farm, or composting partner.</p>
+                        </div>
+                        <div class="bg-waste-50/50 p-8 rounded-3xl border border-gray-100 relative">
+                            <div class="text-3xl font-black text-gray-300 absolute top-6 right-6">03</div>
+                            <div class="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-2xl mb-6">🎁</div>
+                            <h3 class="text-xl font-bold text-waste-700 mb-2">Reward</h3>
+                            <p class="text-sm text-gray-600 leading-relaxed">Once your donation is verified, you receive points that can be redeemed for partner offers.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Why WasteAway -->
+            <section class="py-20 bg-waste-50/30">
+                <div class="max-w-7xl mx-auto px-6">
+                    <div class="text-center max-w-2xl mx-auto mb-16">
+                        <span class="text-xs font-bold text-waste-500 uppercase tracking-wider">Why WasteAway</span>
+                        <h2 class="text-3xl font-bold text-waste-700 mt-2">Waste can still have value.</h2>
+                        <p class="text-gray-600 text-sm mt-2">The same donation can help people, support farms, and reduce unnecessary waste.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+                            <div class="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-2xl mb-6">🍎</div>
+                            <h3 class="text-lg font-bold text-waste-700 mb-2">Edible surplus</h3>
+                            <p class="text-sm text-gray-600 leading-relaxed">Food that is still suitable for consumption can be routed toward people who need it.</p>
+                        </div>
+                        <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+                            <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-2xl mb-6">🌱</div>
+                            <h3 class="text-lg font-bold text-waste-700 mb-2">Organic compost</h3>
+                            <p class="text-sm text-gray-600 leading-relaxed">Non-edible organic material can be redirected toward farms and composting partners.</p>
+                        </div>
+                        <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
+                            <div class="w-12 h-12 bg-amber-50 rounded-2xl flex items-center justify-center text-2xl mb-6">⭐</div>
+                            <h3 class="text-lg font-bold text-waste-700 mb-2">Real rewards</h3>
+                            <p class="text-sm text-gray-600 leading-relaxed">Your contributions build points that can unlock discounts and offers from local partners.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Bar -->
+            <section class="bg-waste-600 py-16 text-white">
+                <div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 text-center md:text-left">
+                    <div>
+                        <div class="text-3xl lg:text-4xl font-extrabold mb-1">12,450 kg</div>
+                        <div class="text-emerald-200 text-xs font-medium uppercase tracking-wider">Waste diverted</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl lg:text-4xl font-extrabold mb-1">3,200+</div>
+                        <div class="text-emerald-200 text-xs font-medium uppercase tracking-wider">Community donations</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl lg:text-4xl font-extrabold mb-1">850+</div>
+                        <div class="text-emerald-200 text-xs font-medium uppercase tracking-wider">Rewards redeemed</div>
+                    </div>
+                    <div>
+                        <div class="text-3xl lg:text-4xl font-extrabold mb-1">20+</div>
+                        <div class="text-emerald-200 text-xs font-medium uppercase tracking-wider">Local partners</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer CTA -->
+            <section class="bg-waste-700 py-20 text-white text-center">
+                <div class="max-w-3xl mx-auto px-6 space-y-6">
+                    <span class="text-xs font-bold text-emerald-300 uppercase tracking-wider">Ready to make a difference?</span>
+                    <h2 class="text-4xl font-extrabold tracking-tight">Your leftovers can still do something good.</h2>
+                    <p class="text-emerald-100 text-sm max-w-lg mx-auto">Join WasteAway and turn each donation into community impact.</p>
+                    <button onclick="startDonation()" class="bg-white hover:bg-gray-100 text-waste-700 px-8 py-3.5 rounded-full font-bold shadow-lg transition-all inline-block">
+                        Get Started
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- VIEW 2: USER DASHBOARD -->
+        <div id="view-dashboard" class="view-section hidden py-10 bg-waste-50/20">
+            <div class="max-w-7xl mx-auto px-6 space-y-8">
+                <div>
+                    <span class="text-xs font-bold text-waste-500 uppercase tracking-wider">Your WasteAway Dashboard</span>
+                    <h1 class="text-4xl font-extrabold text-waste-700 mt-1">Welcome back, Demo.</h1>
+                    <p class="text-gray-600 text-sm mt-1">Here's what your WasteAway activity looks like.</p>
+                </div>
+
+                <!-- Top Stats Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Current Points</span>
+                            <span class="text-amber-500 text-xl">⭐</span>
+                        </div>
+                        <div id="dash-points" class="text-4xl font-black text-waste-700 mb-1">532</div>
+                        <div class="text-xs text-gray-500">Available for rewards</div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Environmental Impact</span>
+                            <span class="text-emerald-600 text-xl">🌱</span>
+                        </div>
+                        <div id="dash-impact" class="text-4xl font-black text-waste-700 mb-1">20.5 kg</div>
+                        <div class="text-xs text-gray-500">Waste successfully diverted</div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm relative overflow-hidden">
+                        <div class="flex items-center justify-between mb-4">
+                            <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Donations</span>
+                            <span class="text-orange-400 text-xl">📦</span>
+                        </div>
+                        <div id="dash-donation-count" class="text-4xl font-black text-waste-700 mb-1">4</div>
+                        <div class="text-xs text-gray-500">Total donations logged</div>
+                    </div>
+                </div>
+
+                <!-- Main Activity & Quick Actions -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Recent Donations List -->
+                    <div class="lg:col-span-2 bg-white p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-xl font-bold text-waste-700">Recent donations</h3>
+                            <button onclick="startDonation()" class="bg-waste-500 hover:bg-waste-600 text-white px-4 py-2 rounded-full text-xs font-bold shadow-sm transition-all flex items-center space-x-1.5">
+                                <span>+ New Donation</span>
+                            </button>
+                        </div>
+
+                        <div id="donations-list-container" class="divide-y divide-gray-100">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Right Sidebar -->
+                    <div class="space-y-6">
+                        <div class="bg-waste-600 text-white p-8 rounded-3xl shadow-md space-y-4">
+                            <span class="text-xs font-bold uppercase tracking-wider text-emerald-200">Take Action</span>
+                            <h3 class="text-2xl font-extrabold tracking-tight">Have food to donate?</h3>
+                            <p class="text-sm text-emerald-100 leading-relaxed">Log a new donation and let WasteAway handle the next step.</p>
+                            <button onclick="startDonation()" class="w-full bg-white hover:bg-gray-100 text-waste-700 py-3 rounded-full font-bold shadow-md transition-all text-sm">
+                                Donate Food
+                            </button>
+                        </div>
+
+                        <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm space-y-3">
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xl">🌍</span>
+                                <span class="text-xs font-bold uppercase tracking-wider text-gray-400">Your Impact</span>
+                            </div>
+                            <h4 class="text-lg font-bold text-waste-700">Every kilogram counts.</h4>
+                            <p class="text-xs text-gray-600 leading-relaxed">Your verified donations contribute to a healthier community and less food waste.</p>
+                            <button onclick="switchView('rewards')" class="text-xs font-bold text-waste-500 hover:text-waste-700 transition-colors inline-flex items-center space-x-1 pt-1">
+                                <span>View Rewards →</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 3: DONATION WIZARD -->
+        <div id="view-donate" class="view-section hidden py-12 bg-waste-50/20">
+            <div class="max-w-4xl mx-auto px-6 space-y-8">
+                <div class="text-center space-y-2">
+                    <span class="text-xs font-bold text-waste-500 uppercase tracking-wider">WasteAway Donation</span>
+                    <h1 class="text-4xl font-extrabold text-waste-700">Turn your food waste into impact.</h1>
+                    <p class="text-gray-600 text-sm">Tell us what you have, how much you have, and how you want to send it to us.</p>
+                </div>
+
+                <!-- Wizard Card -->
+                <div class="bg-white p-8 lg:p-12 rounded-3xl border border-gray-100 shadow-xl space-y-8">
+                    <!-- Wizard Steps Indicator Header -->
+                    <div class="flex items-center justify-center space-x-4 border-b border-gray-100 pb-6">
+                        <div id="wizard-indicator-1" class="flex items-center space-x-2 bg-waste-500 text-white px-4 py-2 rounded-full text-xs font-bold">
+                            <span>1</span>
+                            <span>Category</span>
+                        </div>
+                        <div id="wizard-indicator-2" class="flex items-center space-x-2 bg-gray-100 text-gray-400 px-4 py-2 rounded-full text-xs font-bold">
+                            <span>2</span>
+                            <span>Volume</span>
+                        </div>
+                        <div id="wizard-indicator-3" class="flex items-center space-x-2 bg-gray-100 text-gray-400 px-4 py-2 rounded-full text-xs font-bold">
+                            <span>3</span>
+                            <span>Logistics</span>
+                        </div>
+                    </div>
+
+                    <!-- STEP 1: CATEGORY -->
+                    <div id="wizard-step-1" class="wizard-step space-y-6">
+                        <div>
+                            <span class="text-xs font-bold text-waste-500 uppercase tracking-wider">Step 1 of 3</span>
+                            <h2 class="text-2xl font-bold text-waste-700 mt-1">What are you donating?</h2>
+                            <p class="text-gray-600 text-sm mt-1">We'll use this to determine where your donation should be routed.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <label onclick="selectCategory('Edible surplus')" class="donation-card-option border-2 border-gray-200 hover:border-waste-500 p-6 rounded-2xl cursor-pointer transition-all flex flex-col justify-between relative bg-white">
+                                <div class="flex items-start justify-between">
+                                    <div class="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center text-2xl">🍎</div>
+                                    <input type="radio" name="category" value="Edible surplus" class="text-waste-500 focus:ring-waste-500" checked>
+                                </div>
+                                <div class="mt-6">
+                                    <h3 class="font-bold text-waste-700 text-lg">Edible surplus</h3>
+                                    <p class="text-xs text-gray-500 mt-1">Food that is still suitable for people to eat.</p>
+                                    <div class="mt-4 pt-3 border-t border-gray-100 text-xs font-semibold text-waste-600">
+                                        Example: extra cooked meals, unopened food
+                                    </div>
+                                </div>
+                            </label>
+
+                            <label onclick="selectCategory('Organic compost')" class="donation-card-option border-2 border-gray-200 hover:border-waste-500 p-6 rounded-2xl cursor-pointer transition-all flex flex-col justify-between relative bg-white">
+                                <div class="flex items-start justify-between">
+                                    <div class="w-12 h-12 bg-emerald-50 rounded-xl flex items-center justify-center text-2xl">🌱</div>
+                                    <input type="radio" name="category" value="Organic compost" class="text-waste-500 focus:ring-waste-500">
+                                </div>
+                                <div class="mt-6">
+                                    <h3 class="font-bold text-waste-700 text-lg">Organic compost</h3>
+                                    <p class="text-xs text-gray-500 mt-1">Food scraps or organic material unsuitable for eating.</p>
+                                    <div class="mt-4 pt-3 border-t border-gray-100 text-xs font-semibold text-waste-600">
+                                        Example: vegetable scraps, fruit peels
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div class="flex justify-end pt-4">
+                            <button onclick="goToStep(2)" class="bg-waste-500 hover:bg-waste-600 text-white px-8 py-3 rounded-full font-bold text-sm shadow-md transition-all">
+                                Continue →
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 2: VOLUME -->
+                    <div id="wizard-step-2" class="wizard-step hidden space-y-6">
+                        <div>
+                            <span class="text-xs font-bold text-waste-500 uppercase tracking-wider">Step 2 of 3</span>
+                            <h2 class="text-2xl font-bold text-waste-700 mt-1">How much are you donating?</h2>
+                            <p class="text-gray-600 text-sm mt-1">Enter your best estimate. The system uses the weight to calculate your reward.</p>
+                        </div>
+
+                        <div class="bg-gray-50/50 p-6 rounded-2xl border border-gray-100 space-y-6">
+                            <div>
+                                <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Estimated weight</label>
+                                <div class="flex items-center space-x-3">
+                                    <input type="number" id="donation-weight" value="5" min="0.5" step="0.5" oninput="calculateReward()" class="w-32 bg-white border border-gray-200 px-4 py-3 rounded-xl font-bold text-lg text-waste-700 focus:outline-none focus:border-waste-500">
+                                    <span class="font-bold text-gray-600 text-lg">kg</span>
+                                </div>
+                            </div>
+
+                            <div class="border-t border-gray-200 pt-4 flex items-center justify-between">
+                                <div>
+                                    <div class="text-xs text-gray-500">Estimated reward</div>
+                                    <div id="reward-rate-desc" class="text-xs text-gray-400 mt-0.5">Edible surplus earns 24 points per kilogram.</div>
+                                </div>
+                                <div id="estimated-reward-display" class="text-2xl font-black text-waste-600">120 pts</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-4">
+                            <button onclick="goToStep(1)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-full font-bold text-sm transition-all">
+                                ← Back
+                            </button>
+                            <button onclick="goToStep(3)" class="bg-waste-500 hover:bg-waste-600 text-white px-8 py-3 rounded-full font-bold text-sm shadow-md transition-all">
+                                Continue →
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- STEP 3: LOGISTICS -->
+                    <div id="wizard-step-3" class="wizard-step hidden space-y-6">
+                        <div>
+                            <span class="text-xs font-bold text-waste-500 uppercase tracking-wider">Step 3 of 3</span>
+                            <h2 class="text-2xl font-bold text-waste-700 mt-1">How should we receive it?</h2>
+                            <p class="text-gray-600 text-sm mt-1">Choose a nearby drop-off point or schedule a pickup.</p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <label onclick="selectLogistics('Drop-off')" class="logistics-card-option border-2 border-waste-500 p-6 rounded-2xl cursor-pointer transition-all flex items-start space-x-4 bg-waste-50/30">
+                                <input type="radio" name="logistics" value="Drop-off" class="mt-1 text-waste-500 focus:ring-waste-500" checked>
+                                <div>
+                                    <h3 class="font-bold text-waste-700 text-base">Drop-off</h3>
+                                    <p class="text-xs text-gray-500 mt-1">Bring your donation to a community point.</p>
+                                </div>
+                            </label>
+
+                            <label onclick="selectLogistics('Pickup')" class="logistics-card-option border-2 border-gray-200 p-6 rounded-2xl cursor-pointer transition-all flex items-start space-x-4 bg-white">
+                                <input type="radio" name="logistics" value="Pickup" class="mt-1 text-waste-500 focus:ring-waste-500">
+                                <div>
+                                    <h3 class="font-bold text-waste-700 text-base">Pickup</h3>
+                                    <p class="text-xs text-gray-500 mt-1">Schedule WasteAway to collect it.</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <div id="pickup-date-container" class="bg-gray-50/50 p-6 rounded-2xl border border-gray-100 hidden">
+                            <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-2">Pickup date</label>
+                            <input type="date" id="pickup-date" class="w-full bg-white border border-gray-200 px-4 py-3 rounded-xl font-medium text-sm text-waste-700 focus:outline-none focus:border-waste-500">
+                        </div>
+
+                        <div class="bg-gray-50 p-4 rounded-2xl grid grid-cols-3 gap-4 text-center">
+                            <div>
+                                <div class="text-xs text-gray-400">Donation</div>
+                                <div id="summary-category" class="font-bold text-sm text-waste-700 truncate">Edible surplus</div>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-400">Weight</div>
+                                <div id="summary-weight" class="font-bold text-sm text-waste-700">5.0 kg</div>
+                            </div>
+                            <div>
+                                <div class="text-xs text-gray-400">Estimated reward</div>
+                                <div id="summary-reward" class="font-bold text-sm text-waste-600">+120 pts</div>
+                            </div>
+                        </div>
+
+                        <div class="flex items-center justify-between pt-4">
+                            <button onclick="goToStep(2)" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-full font-bold text-sm transition-all">
+                                ← Back
+                            </button>
+                            <button onclick="submitDonation()" class="bg-waste-500 hover:bg-waste-600 text-white px-8 py-3 rounded-full font-bold text-sm shadow-md transition-all">
+                                Submit Donation
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- SUCCESS SCREEN -->
+                    <div id="wizard-success" class="wizard-step hidden text-center space-y-6 py-8">
+                        <div class="w-16 h-16 bg-emerald-100 text-waste-600 rounded-full flex items-center justify-center text-3xl mx-auto shadow-inner">
+                            ✓
+                        </div>
+                        <div class="space-y-2">
+                            <span class="text-xs font-bold text-waste-500 uppercase tracking-wider">Donation Submitted</span>
+                            <h2 class="text-3xl font-extrabold text-waste-700">Your donation is on its way.</h2>
+                            <p class="text-gray-600 text-sm max-w-md mx-auto">Your donation has been logged and is currently waiting for verification.</p>
+                        </div>
+
+                        <div class="bg-gray-50 p-6 rounded-2xl max-w-lg mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 text-left text-xs">
+                            <div>
+                                <div class="text-gray-400">Donation type</div>
+                                <div id="success-type" class="font-bold text-waste-700 mt-0.5">Organic compost</div>
+                            </div>
+                            <div>
+                                <div class="text-gray-400">Weight</div>
+                                <div id="success-weight" class="font-bold text-waste-700 mt-0.5">5.0 kg</div>
+                            </div>
+                            <div>
+                                <div class="text-gray-400">Estimated reward</div>
+                                <div id="success-reward" class="font-bold text-waste-600 mt-0.5">+40 pts</div>
+                            </div>
+                            <div>
+                                <div class="text-gray-400">Status</div>
+                                <div class="font-bold text-amber-600 mt-0.5">Pending Drop-off</div>
+                            </div>
+                        </div>
+
+                        <div class="flex justify-center space-x-4 pt-4">
+                            <button onclick="switchView('dashboard')" class="bg-waste-500 hover:bg-waste-600 text-white px-8 py-3 rounded-full font-bold text-sm shadow-md transition-all">
+                                View My Dashboard
+                            </button>
+                            <button onclick="switchView('rewards')" class="bg-white hover:bg-gray-50 border border-gray-200 text-gray-700 px-6 py-3 rounded-full font-bold text-sm transition-all">
+                                View Rewards
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW 4: REWARDS -->
+        <div id="view-rewards" class="view-section hidden py-12 bg-waste-50/20">
+            <div class="max-w-7xl mx-auto px-6 space-y-8">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <span class="text-xs font-bold text-waste-500 uppercase tracking-wider">Rewards Marketplace</span>
+                        <h1 class="text-4xl font-extrabold text-waste-700 mt-1">Redeem your community impact.</h1>
+                        <p class="text-gray-600 text-sm mt-1">Trade your earned WasteAway points for partner discounts and offers.</p>
+                    </div>
+                    <div class="bg-white px-6 py-4 rounded-3xl border border-gray-100 shadow-sm flex items-center space-x-3">
+                        <span class="text-2xl">⭐</span>
+                        <div>
+                            <div class="text-xs text-gray-400 font-bold uppercase">Your Balance</div>
+                            <div id="rewards-points-balance" class="text-2xl font-black text-waste-700">532 pts</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reward Cards Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Reward 1 -->
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between space-y-6">
+                        <div>
+                            <div class="w-14 h-14 bg-green-50 rounded-2xl flex items-center justify-center text-2xl mb-4">🥗</div>
+                            <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full">Local Partner</span>
+                            <h3 class="text-xl font-bold text-waste-700 mt-3">20% Off Organic Produce</h3>
+                            <p class="text-sm text-gray-600 mt-1">Redeem for a 20% discount coupon at Green Market partner grocers.</p>
+                        </div>
+                        <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="font-black text-waste-600 text-lg">150 pts</span>
+                            <button onclick="redeemReward(150, '20% Off Organic Produce')" class="bg-waste-500 hover:bg-waste-600 text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-sm transition-all">
+                                Redeem Reward
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Reward 2 -->
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between space-y-6">
+                        <div>
+                            <div class="w-14 h-14 bg-amber-50 rounded-2xl flex items-center justify-center text-2xl mb-4">☕</div>
+                            <span class="bg-amber-50 text-amber-700 text-xs font-bold px-2.5 py-1 rounded-full">Community Cafe</span>
+                            <h3 class="text-xl font-bold text-waste-700 mt-3">Free Artisan Coffee</h3>
+                            <p class="text-sm text-gray-600 mt-1">Enjoy a complimentary hot beverage at participating Zero-Waste cafes.</p>
+                        </div>
+                        <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="font-black text-waste-600 text-lg">250 pts</span>
+                            <button onclick="redeemReward(250, 'Free Artisan Coffee')" class="bg-waste-500 hover:bg-waste-600 text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-sm transition-all">
+                                Redeem Reward
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Reward 3 -->
+                    <div class="bg-white p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col justify-between space-y-6">
+                        <div>
+                            <div class="w-14 h-14 bg-emerald-50 rounded-2xl flex items-center justify-center text-2xl mb-4">🌳</div>
+                            <span class="bg-emerald-50 text-emerald-700 text-xs font-bold px-2.5 py-1 rounded-full">Eco Initiative</span>
+                            <h3 class="text-xl font-bold text-waste-700 mt-3">Plant a Tree in Your Name</h3>
+                            <p class="text-sm text-gray-600 mt-1">Contribute a sponsored sapling to local urban forestry projects.</p>
+                        </div>
+                        <div class="pt-4 border-t border-gray-100 flex items-center justify-between">
+                            <span class="font-black text-waste-600 text-lg">400 pts</span>
+                            <button onclick="redeemReward(400, 'Plant a Tree in Your Name')" class="bg-waste-500 hover:bg-waste-600 text-white px-5 py-2.5 rounded-full text-xs font-bold shadow-sm transition-all">
+                                Redeem Reward
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Custom Notification Modal / Toast -->
+    <div id="toast-modal" class="fixed bottom-6 right-6 z-50 transform translate-y-32 opacity-0 transition-all duration-300">
+        <div class="bg-waste-700 text-white px-6 py-4 rounded-2xl shadow-xl flex items-center space-x-3">
+            <span id="toast-icon" class="text-xl">✨</span>
+            <div>
+                <div id="toast-title" class="font-bold text-sm">Notification</div>
+                <div id="toast-desc" class="text-xs text-emerald-200">Action completed successfully.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application State
+        let appState = {
+            points: 532,
+            impact: 20.5,
+            donationCount: 4,
+            donations: [
+                { id: 1, type: 'Edible surplus', weight: 10.0, location: 'Green Market Community Point', date: 'Sep 23, 2026', points: 120, status: 'Verified' },
+                { id: 2, type: 'Edible surplus', weight: 2.5, location: 'Community Center', date: 'Sep 23, 2026', points: 30, status: 'Verified' },
+                { id: 3, type: 'Edible surplus', weight: 1.5, location: 'Super Indo Community Point', date: 'Sep 23, 2026', points: 18, status: 'Verified' },
+                { id: 4, type: 'Organic compost', weight: 4.0, location: 'Home pickup', date: 'Sep 23, 2026', points: 32, status: 'Verified' }
+            ],
+            newDonation: {
+                category: 'Edible surplus',
+                weight: 5.0,
+                logistics: 'Drop-off',
+                date: '2026-09-24'
+            }
+        };
+
+        // Navigation Controller
+        function switchView(viewName) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            document.getElementById('view-' + viewName).classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (viewName === 'dashboard') {
+                renderDashboard();
+            } else if (viewName === 'rewards') {
+                document.getElementById('rewards-points-balance').innerText = appState.points + ' pts';
+            }
+        }
+
+        function scrollToHowItWorks() {
+            switchView('home');
+            setTimeout(() => {
+                document.getElementById('how-it-works').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        // Donation Wizard Controller
+        function startDonation() {
+            switchView('donate');
+            goToStep(1);
+        }
+
+        function selectCategory(cat) {
+            appState.newDonation.category = cat;
+            calculateReward();
+        }
+
+        function selectLogistics(log) {
+            appState.newDonation.logistics = log;
+            const pickupContainer = document.getElementById('pickup-date-container');
+            const options = document.querySelectorAll('.logistics-card-option');
+            
+            options.forEach(opt => {
+                opt.classList.remove('border-waste-500', 'bg-waste-50/30');
+                opt.classList.add('border-gray-200', 'bg-white');
+                if(opt.querySelector('input').value === log) {
+                    opt.classList.remove('border-gray-200', 'bg-white');
+                    opt.classList.add('border-waste-500', 'bg-waste-50/30');
+                    opt.querySelector('input').checked = true;
+                }
+            });
+
+            if (log === 'Pickup') {
+                pickupContainer.classList.remove('hidden');
+            } else {
+                pickupContainer.classList.add('hidden');
+            }
+        }
+
+        function calculateReward() {
+            const weightInput = document.getElementById('donation-weight');
+            const weight = parseFloat(weightInput.value) || 0;
+            appState.newDonation.weight = weight;
+
+            const rate = appState.newDonation.category === 'Edible surplus' ? 24 : 8;
+            const points = Math.round(weight * rate);
+
+            document.getElementById('reward-rate-desc').innerText = `${appState.newDonation.category} earns ${rate} points per kilogram.`;
+            document.getElementById('estimated-reward-display').innerText = points + ' pts';
+            
+            // Update step 3 summary
+            document.getElementById('summary-category').innerText = appState.newDonation.category;
+            document.getElementById('summary-weight').innerText = weight.toFixed(1) + ' kg';
+            document.getElementById('summary-reward').innerText = '+' + points + ' pts';
+        }
+
+        function goToStep(stepNum) {
+            document.querySelectorAll('.wizard-step').forEach(el => el.classList.add('hidden'));
+            document.getElementById('wizard-step-' + stepNum).classList.remove('hidden');
+
+            // Update indicators
+            for(let i = 1; i <= 3; i++) {
+                const ind = document.getElementById('wizard-indicator-' + i);
+                if(i < stepNum) {
+                    ind.className = 'flex items-center space-x-2 bg-emerald-800 text-white px-4 py-2 rounded-full text-xs font-bold';
+                    ind.innerHTML = `<span>✓</span><span>${ind.children[1].innerText}</span>`;
+                } else if(i === stepNum) {
+                    ind.className = 'flex items-center space-x-2 bg-waste-500 text-white px-4 py-2 rounded-full text-xs font-bold';
+                } else {
+                    ind.className = 'flex items-center space-x-2 bg-gray-100 text-gray-400 px-4 py-2 rounded-full text-xs font-bold';
+                }
+            }
+
+            if(stepNum === 2) {
+                calculateReward();
+            }
+        }
+
+        function submitDonation() {
+            const rate = appState.newDonation.category === 'Edible surplus' ? 24 : 8;
+            const earnedPoints = Math.round(appState.newDonation.weight * rate);
+
+            const newRecord = {
+                id: appState.donations.length + 1,
+                type: appState.newDonation.category,
+                weight: appState.newDonation.weight,
+                location: appState.newDonation.logistics === 'Pickup' ? 'Home pickup' : 'Community Drop-off Point',
+                date: 'Sep 23, 2026',
+                points: earnedPoints,
+                status: 'Pending'
+            };
+
+            appState.donations.unshift(newRecord);
+            appState.donationCount += 1;
+            appState.impact += appState.newDonation.weight;
+
+            // Success screen population
+            document.getElementById('success-type').innerText = newRecord.type;
+            document.getElementById('success-weight').innerText = newRecord.weight.toFixed(1) + ' kg';
+            document.getElementById('success-reward').innerText = '+' + earnedPoints + ' points';
+
+            document.querySelectorAll('.wizard-step').forEach(el => el.classList.add('hidden'));
+            document.getElementById('wizard-success').classList.remove('hidden');
+
+            showToast('Donation Logged!', 'Your contribution has been successfully submitted.');
+        }
+
+        // Dashboard Renderer
+        function renderDashboard() {
+            document.getElementById('dash-points').innerText = appState.points;
+            document.getElementById('dash-impact').innerText = appState.impact.toFixed(1) + ' kg';
+            document.getElementById('dash-donation-count').innerText = appState.donationCount;
+
+            const listContainer = document.getElementById('donations-list-container');
+            listContainer.innerHTML = '';
+
+            appState.donations.forEach((item, index) => {
+                const isVerified = item.status === 'Verified';
+                const statusBadge = isVerified ? 
+                    `<div class="flex items-center space-x-3 text-xs"><span class="flex items-center text-gray-400"><span class="w-2 h-2 bg-emerald-500 rounded-full mr-1.5"></span>Pending Drop-off</span><span class="flex items-center text-emerald-700 font-bold"><span class="w-2 h-2 bg-emerald-600 rounded-full mr-1.5"></span>Verified</span><span class="flex items-center text-emerald-700 font-bold"><span class="w-2 h-2 bg-emerald-600 rounded-full mr-1.5"></span>Points Awarded</span></div>` :
+                    `<div class="flex items-center justify-between"><span class="text-xs text-amber-600 font-bold bg-amber-50 px-2.5 py-1 rounded-full">Pending Verification</span><button onclick="simulateVerification(${index})" class="bg-waste-50 hover:bg-waste-100 text-waste-600 px-3 py-1 rounded-full text-xs font-bold transition-all">Simulate Verification →</button></div>`;
+
+                const row = document.createElement('div');
+                row.className = 'py-4 flex flex-col md:flex-row md:items-center justify-between gap-4';
+                row.innerHTML = `
+                    <div class="flex items-center space-x-4">
+                        <div class="w-12 h-12 bg-red-50 rounded-2xl flex items-center justify-center text-xl flex-shrink-0">🍎</div>
+                        <div>
+                            <div class="font-bold text-waste-700">${item.type}</div>
+                            <div class="text-xs text-gray-500">${item.weight.toFixed(1)} kg - ${item.location}</div>
+                            <div class="text-[10px] text-gray-400 mt-0.5">${item.date}</div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col md:items-end space-y-2">
+                        <div class="text-emerald-600 font-bold text-sm">+${item.points} pts</div>
+                        ${statusBadge}
+                    </div>
+                `;
+                listContainer.appendChild(row);
+            });
+        }
+
+        function simulateVerification(index) {
+            const item = appState.donations[index];
+            if (item.status !== 'Verified') {
+                item.status = 'Verified';
+                appState.points += item.points;
+                renderDashboard();
+                showToast('Donation Verified!', `+${item.points} points have been added to your balance.`);
+            }
+        }
+
+        // Rewards Redemption
+        function redeemReward(cost, title) {
+            if (appState.points >= cost) {
+                appState.points -= cost;
+                document.getElementById('rewards-points-balance').innerText = appState.points + ' pts';
+                showToast('Reward Redeemed!', `You successfully claimed: ${title}`);
+            } else {
+                showToast('Insufficient Points', 'Keep donating food to earn more points!');
+            }
+        }
+
+        // Toast Notification System
+        function showToast(title, desc) {
+            const toast = document.getElementById('toast-modal');
+            document.getElementById('toast-title').innerText = title;
+            document.getElementById('toast-desc').innerText = desc;
+
+            toast.classList.remove('translate-y-32', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-32', 'opacity-0');
+            }, 3500);
+        }
+
+        function handleLogout() {
+            showToast('Logged Out', 'Demo session ended. Welcome back anytime!');
+            setTimeout(() => {
+                switchView('home');
+            }, 1000);
+        }
+
+        // Initialize view on load
+        window.onload = function() {
+            switchView('home');
+        };
+    </script>
+</body>
+</html>
